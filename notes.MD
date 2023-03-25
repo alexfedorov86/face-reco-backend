@@ -26,3 +26,14 @@ $ heroku logs --tail
     }
 // We continue using nodemon in local development environment, but not during production on the Heroku server.
 
+$ git add .
+$ git commit -m "scripts in package.json modified to run nodemon only in local dev environment"
+
+// push to github and heroku, and open:
+// blank page and hanging loading...
+// Logs: "Error R10 (Boot timeout) -> Web process failed to bind to $PORT within 60 seconds of launch"
+// Solution: modify server.js:
+    app.listen(process.env.PORT || 3000, () => ...) 
+
+// add, commit and push
+
