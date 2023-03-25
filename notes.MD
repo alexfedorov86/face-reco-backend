@@ -1,39 +1,41 @@
-DEPLOYING to HEROKU
+**Deploying to Heroku**
 
-$ npm install -g heroku
-$ heroku create
-// Created: https://lit-crag-58882.herokuapp.com/ | https://git.heroku.com/lit-crag-58882.git
-$ heroku open // opened newly created heroku app in browser
-$ git remote -v // now we have origin and heroku
+$ npm install -g heroku  
+$ heroku create  
+_Created: https://lit-crag-58882.herokuapp.com/ | https://git.heroku.com/lit-crag-58882.git_  
+$ heroku open -- _opened newly created heroku app in browser_  
+$ git remote -v -- _now we have origin and heroku_  
 
-$ heroku create -a face-reco-backend-86 // i decided to create app with custom name
-$ git remote -v // but here we still have lit-crag-58882, not the newly created app
+$ heroku create -a face-reco-backend-86 -- _I decided to create app with custom name_  
+$ git remote -v -- _But here we still have lit-crag-58882, not the newly created app_
 
-$ heroku apps:destroy --app lit-crag-58882 --confirm lit-crag-58882
-$ git remote add heroku https://git.heroku.com/face-reco-backend-86.git
-// We deleted not neede app and added new app instead
+$ heroku apps:destroy --app lit-crag-58882 --confirm lit-crag-58882  
+$ git remote add heroku https://git.heroku.com/face-reco-backend-86.git  
+_We deleted not neede app and added new app instead_
 
-$ git push heroku main
-$ heroku open // error - let's see logs
+$ git push heroku main  
+$ heroku open -- _error - let's see logs_
 
-$ heroku logs --tail
-// Error "sh: 1: nodemon: not found"
-// Solution: modified package.json:
-
-  "scripts": {
+$ heroku logs --tail  
+_Error "sh: 1: nodemon: not found"_
+_Solution: modified package.json:_  
+`"scripts": {
       "start": "node server.js",
       "start:dev": "nodemon server.js"
-    }
-// We continue using nodemon in local development environment, but not during production on the Heroku server.
+    }`  
+_We continue using nodemon in local development environment, but not during production on the Heroku server._
 
-$ git add .
-$ git commit -m "scripts in package.json modified to run nodemon only in local dev environment"
+$ git add .  
+$ git commit -m "scripts in package.json modified to run nodemon only in local dev environment"  
 
-// push to github and heroku, and open:
-// blank page and hanging loading...
-// Logs: "Error R10 (Boot timeout) -> Web process failed to bind to $PORT within 60 seconds of launch"
-// Solution: modify server.js:
-    app.listen(process.env.PORT || 3000, () => ...) 
+_push to github and heroku, and open:_  
+_blank page and hanging loading..._  
+_Logs: "Error R10 (Boot timeout) -> Web process failed to bind to $PORT within 60 seconds of launch"_  
+_Solution: modify server.js:_  
+    _app.listen(process.env.PORT || 3000, () => ...)_
 
-// add, commit and push
+Add, commit, push and open:  
+It starts, goes with route  
+  _app.get('/', (req, res) => {...})_  
+Receives respond with message and shows it, but in logs we see error "connect ECONNREFUSED 127.0.0.1:5432", because it was a local connection to our database.
 
