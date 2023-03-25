@@ -11,7 +11,7 @@ $ git remote -v -- _But here we still have lit-crag-58882, not the newly created
 
 $ heroku apps:destroy --app lit-crag-58882 --confirm lit-crag-58882  
 $ git remote add heroku https://git.heroku.com/face-reco-backend-86.git  
-_We deleted not neede app and added new app instead_
+_We deleted not needed app and added new app instead_
 
 $ git push heroku main  
 $ heroku open -- _error - let's see logs_
@@ -38,4 +38,53 @@ Add, commit, push and open:
 It starts, goes with route  
   _app.get('/', (req, res) => {...})_  
 Receives respond with message and shows it, but in logs we see error "connect ECONNREFUSED 127.0.0.1:5432", because it was a local connection to our database.
+
+
+
+
+
+**Connecting to Postgres on Heroku**
+ 
+ 1. On Heroku add Postgres to our App
+
+ 2. Connect to db  
+ _https://devcenter.heroku.com/articles/heroku-postgresql_  
+ _https://devcenter.heroku.com/articles/managing-heroku-postgres-using-cli_
+
+ `heroku addons`    to check if DB is already connected (in our case yes)  
+ `heroku pg:info`    some info about connected database  
+ `heroku pg:psql`    connecting to our "postgresql-concave-33478"
+
+ 3. Create tables
+ _Go to pgAdmin and copy queries from history_  
+
+ `CREATE TABLE login (
+	id serial PRIMARY KEY,
+	hash varchar(100) NOT NULL,
+	email text UNIQUE NOT NULL
+ );`
+
+ `CREATE TABLE users (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(100),
+	email TEXT UNIQUE NOT NULL,
+	entries BIGINT DEFAULT 0,
+	joined TIMESTAMP NOT NULL
+ );`
+
+ `\d`    check created tables  
+ `\q`    quit psql session
+
+4. Modify connection details inside our _server.js_  
+_https://devcenter.heroku.com/articles/connecting-heroku-postgres#connecting-in-node-js_  
+
+  `connection: {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  }`
+
+
+
 
